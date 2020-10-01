@@ -1,9 +1,5 @@
-import { NativeModules } from 'react-native';
+import { SensorsModule } from './SensorsModule';
 
-type SensorsModuleType = {
-  multiply(a: number, b: number): Promise<number>;
-};
-
-const { SensorsModule } = NativeModules;
-
-export default SensorsModule as SensorsModuleType;
+export * from './useSensors';
+export * from './SensorsModule';
+export default SensorsModule;
