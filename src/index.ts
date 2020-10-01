@@ -1,9 +1,12 @@
 import socket from "socket.io";
 
+import { useSensorsEvents } from "./useSensorsEvents";
+
 const server = socket();
 
 server.on("connection", (socket) => {
   console.log("on connection", socket.id);
+  useSensorsEvents(server, socket);
 
   socket.emit("connected", socket.id);
   console.log("connected >", socket.id);
