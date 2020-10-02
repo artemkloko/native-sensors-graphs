@@ -61,23 +61,6 @@ export const SensorsGraphs: React.FC = () => {
     }
   }, [draw]);
 
-  // const send = () => {
-  //   if (message.handle && message.text) {
-  //     socket.emit("chat", message);
-  //     setMessage({ ...message, text: "" });
-  //   }
-  // };
-
-  // const keypress = () => {
-  //   if (message.handle) {
-  //     socket.emit("typing", message.handle);
-  //   }
-  // };
-
-  // socket.on("chat", (data: Message) => {
-  //   setMessages([...messages, data]);
-  // });
-
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <canvas ref={canvasRef} width={500} height={500} />
