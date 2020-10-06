@@ -44,6 +44,4 @@ By now you should get the "native sensors graphs client" mobile app opened autom
 
 Also a browser window pointing to `http://localhost:3000/` should have been opened automatically.
 
-Press "START MONITORING" in the "native sensors graphs client" mobile app.
-
-You should see 3 graphical bars scaling up and down in the browser window.
+Once both client get connected, you should see 3 graphical bars scaling up and down in the browser window.

@@ -9,7 +9,10 @@ export type SensorsEvent = {
 };
 
 export const useSensors = (onSensorChanged: (event: SensorsEvent) => void) => {
-  const [state, setState] = useState<{ emitter?: NativeEventEmitter }>({});
+  const [state, setState] = useState<{
+    emitter?: NativeEventEmitter;
+    registered: boolean;
+  }>({ registered: false });
 
   const register = useCallback(async () => {
     await SensorsModule.ready();
@@ -20,12 +23,14 @@ export const useSensors = (onSensorChanged: (event: SensorsEvent) => void) => {
     }
     SensorsModule.register();
     emitter.addListener('onSensorChanged', onSensorChanged);
+    setState((state) => ({ ...state, registered: true }));
   }, [state, setState, onSensorChanged]);
 
   const unregister = useCallback(() => {
     state.emitter?.removeAllListeners('onSensorChanged');
     SensorsModule.unregister();
+    setState((state) => ({ ...state, registered: false }));
   }, [state]);
 
-  return { register, unregister };
+  return { register, unregister, registered: state.registered };
 };

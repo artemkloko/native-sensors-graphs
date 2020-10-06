@@ -1,9 +1,12 @@
 import React from "react";
 
-import { SensorsGraphs } from "./components/SensorsGraphs";
+import { SensorsScreen } from "./screens/SensorsScreen";
+import { SocketProvider } from "./stores/SocketContext";
 
-function App() {
-  return <SensorsGraphs />;
-}
-
-export default App;
+export const App = () => {
+  return (
+    <SocketProvider>
+      <SensorsScreen />
+    </SocketProvider>
+  );
+};

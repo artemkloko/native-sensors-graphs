@@ -1,23 +1,23 @@
 import React, { useEffect, useRef } from "react";
-import Socket from "socket.io-client";
 
-const socket = Socket("http://localhost:4000");
+import { ClientType, SensorsEvent } from "../@types";
+import { useClientPool } from "../hooks/useClientPool";
+import { useTabState } from "../hooks/useTabState";
+import { useSocketContext } from "../stores/SocketContext";
 
-export type SensorsEvent = {
-  name: string;
-  values: number[];
-};
-
-const latestData: Partial<SensorsEvent> = {};
-
-enum axisColors {
+export enum axisColors {
   "red",
   "green",
   "blue",
 }
 
-export const SensorsGraphs: React.FC = () => {
+const latestData: Partial<SensorsEvent> = {};
+
+export const SensorsScreen: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { socket } = useSocketContext();
+  const clientPool = useClientPool(ClientType.webApp);
+  const tabState = useTabState();
 
   socket.on("sensorEvent", (event: SensorsEvent) => {
     latestData.name = event.name;
@@ -35,7 +35,7 @@ export const SensorsGraphs: React.FC = () => {
       const y = 250;
       const width = 100;
       const height = latestData.values[axis] * 3;
-      
+
       context.fillStyle = axisColors[axis];
       context.fillRect(x, y, width, height);
       context.fill();
@@ -60,6 +60,25 @@ export const SensorsGraphs: React.FC = () => {
       };
     }
   }, [draw]);
+
+  useEffect(() => {
+    if (tabState.status === "focus" && !clientPool.state.connected) {
+      clientPool.connect();
+    } else if (tabState.status === "blur" && clientPool.state.connected) {
+      clientPool.disconnect();
+    }
+  }, [tabState.status, clientPool.state]);
+
+  if (
+    !clientPool.state.connected ||
+    clientPool.state.clientPool[ClientType.mobile].length === 0
+  ) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        Mobile client is not connected. Waiting...
+      </div>
+    );
+  }
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
