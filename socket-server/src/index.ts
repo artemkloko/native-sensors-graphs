@@ -1,10 +1,12 @@
 import socket from "socket.io";
 
+import { useClientPool } from "./useClientPool";
 import { useSensorsEvents } from "./useSensorsEvents";
 
 const server = socket();
 
 server.on("connection", (socket) => {
+  useClientPool(server, socket);
   useSensorsEvents(server, socket);
 });
 
